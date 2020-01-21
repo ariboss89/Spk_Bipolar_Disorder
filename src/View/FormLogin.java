@@ -11,6 +11,8 @@ import Model.Register;
 import Model.SignIn;
 import javax.swing.JOptionPane;
 import Controller.koneksi;
+import java.math.BigInteger;
+import java.security.MessageDigest;
 /**
  *
  * @author User
@@ -18,6 +20,7 @@ import Controller.koneksi;
 public class FormLogin extends javax.swing.JFrame {
 
     SignIn sign = new SignIn();
+    private String vmd5;
     /**
      * Creates new form FormLogin
      */
@@ -189,20 +192,30 @@ public class FormLogin extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        String usernamee = txtUsername.getText();
-        SignIn.setUsername(usernamee);
-        Register.setNama(usernamee);
-        String passwordd = jPasswordField1.getText();
+        String username = txtUsername.getText().trim();
+        SignIn.setUsername(username);
+        Register.setNama("");
+        String password = jPasswordField1.getText();
+        try {
+            MessageDigest digest = MessageDigest.getInstance("MD5");
+            digest.update(password.getBytes(), 0, password.length());
+            String encPass = new BigInteger(1, digest.digest()).toString(16);
+            vmd5 = encPass.toString();
+            sign.SetPassword(vmd5);
+            
+        } catch (Exception e) {
+
+        }
         
-        if(usernamee.equals("")){
+        
+        if(username.equals("")){
             JOptionPane.showMessageDialog(null, "Field Username Tidak Boleh Kosong");
         }
-        else if(passwordd.equals("")){
+        else if(password.equals("")){
             JOptionPane.showMessageDialog(null, "Field Password Tidak Boleh Kosong");
         }
         else{
-            sign.Login(usernamee, passwordd);
-            new FormMaster().show();
+            sign.Login(username, sign.GetPassword());
             dispose();
         }
     }//GEN-LAST:event_jButton1ActionPerformed

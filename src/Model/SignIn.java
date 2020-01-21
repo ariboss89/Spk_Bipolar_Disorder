@@ -74,10 +74,9 @@ public class SignIn {
         con.connect();
         try {
             st = con.connect().createStatement();
-            res = st.executeQuery("select *from user where username ='" + username + "' And password = md5'" + password + "'");
+            res = st.executeQuery("select *from user where username ='" + username + "' And password = '" + password + "'");
             if (res.next()) {
                 JOptionPane.showMessageDialog(null, "Welcome " + username);
-              
                 new FormMaster().setVisible(true);
                
             } 

@@ -59,12 +59,13 @@ public class Pengaturan {
         this.konfirmasi = konfirmasi;
     }
 
-    public void Update(String nama, String alamat,String username, String password, String konfirmasi) {
+    public void Update(String nama, String alamat, String password, String konfirmasi,String username) {
         con = new koneksi();
         con.connect();
         try {
             st = con.conn.createStatement();
-            query = "update user set nama='" + nama + "',alamat='" + alamat + "',password= md5 '" + password + "',konfirmasi= md5 '" + konfirmasi + "' where username = '" + username + "'";
+           
+            query = "update user set nama='" + nama + "',alamat='" + alamat + "',password='" + password + "',konfirmasi='" + konfirmasi + "' where username = '" + username + "'";
             st.executeUpdate(query);
             st.close();
             con.conn.close();

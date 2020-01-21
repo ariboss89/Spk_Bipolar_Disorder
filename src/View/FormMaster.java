@@ -28,7 +28,7 @@ public class FormMaster extends javax.swing.JFrame {
         int x = (dim.width - getWidth()) / 2;
         int y = (dim.height - getHeight()) / 2;
         setLocation(x, y);
-        //UserAuth();
+        UserAuth();
         Run();
     }
     
@@ -83,12 +83,13 @@ public class FormMaster extends javax.swing.JFrame {
         //String status = Login.getStatus();
         
         if(Register.getNama().equals("")){
-            menuPengetahuan.setVisible(false);
+            menuPengetahuan.setVisible(true);
             lblUsername.setText("HAI "+SignIn.getUsername());
         }
         else if(!Register.getNama().equals("")){
-            menuPengetahuan.setVisible(true);
+            menuPengetahuan.setVisible(false);
             lblUsername.setText("HAI "+Register.getNama());
+            
         }
     }
     /**

@@ -7,10 +7,12 @@ package View;
 
 import Controller.koneksi;
 import Model.Gejala;
-import Model.SignIn;
 import Model.ModelTabel;
 import Model.Pengaturan;
+import Model.SignIn;
 import java.awt.event.KeyEvent;
+import java.math.BigInteger;
+import java.security.MessageDigest;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -23,28 +25,30 @@ import javax.swing.JOptionPane;
 public class FormPengaturan extends javax.swing.JFrame {
 
     Pengaturan pengaturan = new Pengaturan();
+
     /**
      * Creates new form FormLogin
      */
+    private String vmd5;
+    
     public FormPengaturan() {
         initComponents();
         setLocationRelativeTo(this);
-        SignIn.setUsername("ariboss89");
         ShowData();
     }
-    
-    private void ShowData(){
+
+    private void ShowData() {
         java.sql.Connection conn = new koneksi().connect();
-        try{
+        try {
             java.sql.Statement stmt = conn.createStatement();
-            java.sql.ResultSet res = stmt.executeQuery("select *from user where username = '"+SignIn.getUsername()+"'");
-            if(res.next()){
+            java.sql.ResultSet res = stmt.executeQuery("select *from user where username = '" + SignIn.getUsername() + "'");
+            while (res.next()) {
                 txtNama.setText(res.getString("nama"));
                 txtAlamat.setText(res.getString("alamat"));
                 txtUsername.setText(res.getString("username"));
             }
-        }catch(SQLException ex){
-            
+        } catch (SQLException ex) {
+
         }
     }
 
@@ -285,12 +289,23 @@ public class FormPengaturan extends javax.swing.JFrame {
         String username = txtUsername.getText().trim();
         String password = txtPassword.getText().trim();
         String konfirmasi = txtKonfirmasi.getText().trim();
-        if(!password.equals(konfirmasi)){
+
+        try {
+            MessageDigest digest = MessageDigest.getInstance("MD5");
+            digest.update(password.getBytes(), 0, password.length());
+            String encPass = new BigInteger(1, digest.digest()).toString(16);
+            vmd5 = encPass.toString();
+            pengaturan.setPassword(vmd5);
+            pengaturan.setKonfirmasi(vmd5);
+            
+        } catch (Exception e) {
+
+        }
+        if (!password.equals(konfirmasi)) {
             JOptionPane.showMessageDialog(null, "Konfirmasi Tidak Sesuai !!!");
             txtKonfirmasi.requestFocus();
-        }
-        else{
-            pengaturan.Update(nama, alamat, username, password, konfirmasi);
+        } else {
+            pengaturan.Update(nama, alamat, pengaturan.getPassword(), pengaturan.getKonfirmasi(), username);
         }
     }//GEN-LAST:event_btnUpdateActionPerformed
 
